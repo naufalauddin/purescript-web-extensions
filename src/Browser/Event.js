@@ -1,5 +1,5 @@
-"use strict"
+"use strict";
 
-exports.simpleAddListener_ = function(ev, cb) {
+export function simpleAddListener_ (ev, cb) {
     ev.addListener(cb);
 }
