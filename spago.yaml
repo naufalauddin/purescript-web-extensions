@@ -1,0 +1,14 @@
+package:
+  name: web-extensions
+  dependencies:
+    - aff
+    - console
+    - effect
+    - foreign
+    - js-promise-aff
+    - nullable
+    - options
+    - prelude
+workspace:
+  packageSet:
+    registry: 66.2.0

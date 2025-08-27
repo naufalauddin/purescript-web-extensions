@@ -21,7 +21,7 @@
   "author": "losnappas",
   "license": "Unlicense",
   "devDependencies": {
-    "purescript": "^0.13.6",
-    "spago": "^0.14.0"
+    "purescript": "^0.15.15",
+    "spago": "^0.93.44"
   }
 }
