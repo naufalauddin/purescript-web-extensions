@@ -1,3 +1,3 @@
-"use strict"
+"use strict";
 
-exports.onClicked = browser.browserAction.onClicked;
+export const onClicked = browser.browserAction.onClicked;
