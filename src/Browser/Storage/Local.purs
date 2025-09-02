@@ -2,7 +2,7 @@
 module Browser.Storage.Local
   ( clear
   , getByKey
-  , getByRecord
+  , getWithDefault
   , set
   ) where
 
@@ -23,8 +23,8 @@ foreign import _getByRecordImpl :: forall r. EffectFn1 { | r } (Promise { | r })
 getByKey :: String -> Aff Json
 getByKey = Promise.toAffE <<< runEffectFn1 _getByKeyImpl
 
-getByRecord :: forall r. Homogeneous r Json => { | r } -> Aff { | r }
-getByRecord = Promise.toAffE <<< runEffectFn1 _getByRecordImpl
+getWithDefault :: forall r. Homogeneous r Json => { | r } -> Aff { | r }
+getWithDefault = Promise.toAffE <<< runEffectFn1 _getByRecordImpl
 
 foreign import _set :: forall r. EffectFn1 { | r } (Promise Unit)
 
