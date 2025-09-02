@@ -1,13 +1,15 @@
 module Browser.Sessions where
 
-import Prelude (Unit)
 import Browser.Event (SimpleEvent)
-import Browser.Windows (Window)
 import Browser.Tabs (Tab)
-import Effect.Promise (class Deferred, Promise)
-import Foreign (Foreign)
+import Browser.Windows (Window)
 import Data.Options (Option, Options, opt, options)
-import Data.Function.Uncurried (Fn1, Fn2, Fn3, runFn1, runFn2, runFn3)
+import Effect.Aff (Aff)
+import Effect.Uncurried (EffectFn1, EffectFn2, EffectFn3, runEffectFn1, runEffectFn2, runEffectFn3)
+import Foreign (Foreign)
+import Prelude (Unit, (#), (>>>))
+import Promise (Promise)
+import Promise.Aff as Promise
 
 data Filter
 
@@ -23,25 +25,25 @@ type Session =
 foreign import onChanged :: SimpleEvent
 
 --type SessionId = String -- too much work 4 now.
-foreign import restoreImpl :: Fn1 String (Promise Session)
+foreign import restoreImpl :: EffectFn1 String (Promise Session)
 
-restore :: Deferred => String -> Promise Session
-restore = runFn1 restoreImpl
+restore :: String -> Aff Session
+restore = runEffectFn1 restoreImpl >>> Promise.toAffE
 
-foreign import getRecentlyClosedImpl :: Fn1 Foreign (Promise (Array Session))
+foreign import getRecentlyClosedImpl :: EffectFn1 Foreign (Promise (Array Session))
 
-getRecentlyClosed :: Deferred => Options Filter -> Promise (Array Session)
+getRecentlyClosed :: Options Filter -> Aff (Array Session)
 getRecentlyClosed opts = getRecentlyClosed' (options opts)
   where
-  getRecentlyClosed' :: Deferred => Foreign -> Promise (Array Session)
-  getRecentlyClosed' = runFn1 getRecentlyClosedImpl
+  getRecentlyClosed' :: Foreign -> Aff (Array Session)
+  getRecentlyClosed' = runEffectFn1 getRecentlyClosedImpl >>> Promise.toAffE
 
-foreign import setWindowValueImpl :: Fn3 Int String String (Promise Unit)
-foreign import getWindowValueImpl :: Fn2 Int String (Promise String)
+foreign import setWindowValueImpl :: EffectFn3 Int String String (Promise Unit)
+foreign import getWindowValueImpl :: EffectFn2 Int String (Promise String)
 
 -- should be: int -> string -> either string object -> effect promise unit
-setWindowValue :: Deferred => Int -> String -> String -> Promise Unit
-setWindowValue = runFn3 setWindowValueImpl
+setWindowValue :: Int -> String -> String -> Aff Unit
+setWindowValue id key value = runEffectFn3 setWindowValueImpl id key value # Promise.toAffE
 
-getWindowValue :: Deferred => Int -> String -> Promise String
-getWindowValue = runFn2 getWindowValueImpl
+getWindowValue :: Int -> String -> Aff String
+getWindowValue id key = runEffectFn2 getWindowValueImpl id key # Promise.toAffE

@@ -1,20 +1,20 @@
 "use strict"
 
-exports.onChanged = browser.sessions.onChanged;
+export const onChanged = browser.sessions.onChanged;
 
-exports.restoreImpl = function(a) {
+export function restoreImpl(a) {
     return browser.sessions.restore(a)
 }
 
-exports.getRecentlyClosedImpl = function(a) {
+export function getRecentlyClosedImpl(a) {
     return browser.sessions.getRecentlyClosed(a)
 }
 
-exports.setWindowValueImpl = function(windowId, key, value) {
+export function setWindowValueImpl(windowId, key, value) {
     return browser.sessions.setWindowValue(windowId, key, value)
 }
 
-exports.getWindowValueImpl = function(windowId, key) {
+export function getWindowValueImpl(windowId, key) {
     return browser.sessions.getWindowValue(windowId, key)
 }
 

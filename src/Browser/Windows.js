@@ -1,20 +1,20 @@
 "use strict"
 
-exports.onRemoved = browser.windows.onRemoved;
+export const onRemoved = browser.windows.onRemoved;
 
-exports.getAllImpl = function() {
+export function getAllImpl() {
     return browser.windows.getAll
 }
 
-exports.getAllImpl1 = function(getInfo) {
+export function getAllImpl1(getInfo) {
     return browser.windows.getAll(getInfo)
 }
 
-exports.createImpl = function(createData) {
+export function createImpl(createData) {
     return browser.windows.create(createData)
 }
 
-exports.removeImpl = function(windowId) {
+export function removeImpl(windowId) {
     return browser.windows.remove(windowId)
 }
 

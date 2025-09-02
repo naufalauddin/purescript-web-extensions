@@ -1,12 +1,16 @@
 module Browser.Windows where
 
-import Prelude (Unit)
+import Prelude
+
 import Browser.Event (SimpleEvent)
-import Effect.Promise (class Deferred, Promise)
-import Foreign (Foreign)
-import Data.Options (Option, Options, opt, options)
 import Browser.Tabs (Tab)
-import Data.Function.Uncurried (Fn0, Fn1, mkFn0, runFn1)
+import Data.Options (Option, Options, opt, options)
+import Effect (Effect)
+import Effect.Aff (Aff)
+import Effect.Uncurried (EffectFn1, runEffectFn1)
+import Foreign (Foreign)
+import Promise (Promise)
+import Promise.Aff as Promise
 
 data GetInfo
 
@@ -73,28 +77,27 @@ type Window =
   }
 
 foreign import onRemoved :: SimpleEvent
-foreign import getAllImpl :: Unit -> Promise (Array Window)
-foreign import getAllImpl1 :: Fn1 Foreign (Promise (Array Window))
-foreign import createImpl :: Fn1 Foreign (Promise Window)
-foreign import removeImpl :: Fn1 Int (Promise Unit)
-
+foreign import getAllImpl :: Effect (Promise (Array Window))
+foreign import getAllImpl1 :: EffectFn1 Foreign (Promise (Array Window))
+foreign import createImpl :: EffectFn1 Foreign (Promise Window)
+foreign import removeImpl :: EffectFn1 Int (Promise Unit)
 
 -- | Get info on all windows.
-getAll :: Fn0 (Promise (Array Window))
-getAll = mkFn0 getAllImpl
+getAll :: Aff (Array Window)
+getAll = Promise.toAffE getAllImpl
 
-getAll1 :: Deferred => Options GetInfo -> Promise (Array Window)
+getAll1 :: Options GetInfo -> Aff (Array Window)
 getAll1 opts = getAll1' (options opts)
   where
-  getAll1' :: Deferred => Foreign -> Promise (Array Window)
-  getAll1' = runFn1 getAllImpl1
+  getAll1' :: Foreign -> Aff (Array Window)
+  getAll1' = runEffectFn1 getAllImpl1 >>> Promise.toAffE
 
 -- | Create a window.
-create :: Deferred => Options CreateData -> Promise Window
+create :: Options CreateData -> Aff Window
 create opts = create' (options opts)
   where
-  create' :: Deferred => Foreign -> Promise Window
-  create' = runFn1 createImpl
+  create' :: Foreign -> Aff Window
+  create' = runEffectFn1 createImpl >>> Promise.toAffE
 
-remove :: Deferred => Int -> Promise Unit
-remove = runFn1 removeImpl
+remove :: Int -> Aff Unit
+remove = runEffectFn1 removeImpl >>> Promise.toAffE
