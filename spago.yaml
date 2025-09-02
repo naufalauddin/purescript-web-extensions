@@ -2,6 +2,7 @@ package:
   name: web-extensions
   dependencies:
     - aff
+    - argonaut-core
     - console
     - effect
     - foreign

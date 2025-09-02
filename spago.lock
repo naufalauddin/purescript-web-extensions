@@ -6,6 +6,7 @@
         "core": {
           "dependencies": [
             "aff",
+            "argonaut-core",
             "console",
             "effect",
             "foreign",
@@ -16,6 +17,7 @@
           ],
           "build_plan": [
             "aff",
+            "argonaut-core",
             "arrays",
             "bifunctors",
             "console",
@@ -646,6 +648,24 @@
         "tailrec",
         "transformers",
         "unsafe-coerce"
+      ]
+    },
+    "argonaut-core": {
+      "type": "registry",
+      "version": "7.0.0",
+      "integrity": "sha256-RC82GfAjItydxrO24cdX373KHVZiLqybu19b5X8u7B4=",
+      "dependencies": [
+        "arrays",
+        "control",
+        "either",
+        "foreign-object",
+        "functions",
+        "gen",
+        "maybe",
+        "nonempty",
+        "prelude",
+        "strings",
+        "tailrec"
       ]
     },
     "arrays": {
