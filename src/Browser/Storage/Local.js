@@ -1,11 +1,21 @@
-exports._get = function(keys) {
-	return browser.storage.local.get(keys)
+"use strict";
+
+export function _getByKeyImpl(key) {
+	return browser.storage.local.get(key)
 }
 
-exports._set = function(keys) {
+export function _getByArrayImpl(key) {
+	return browser.storage.local.get(key)
+}
+
+export function _getByRecordImpl(key) {
+	return browser.storage.local.get(key)
+}
+
+export function _set(keys) {
 	return browser.storage.local.set(keys)
 }
 
-exports._clear = function() {
+export function _clear() {
 	return browser.storage.local.clear()
 }
