@@ -1,18 +1,18 @@
 "use strict"
 
-exports.updateCurrentImpl = browser.tabs.update;
+export const updateCurrentImpl = browser.tabs.update;
 
-exports.updateImpl = browser.tabs.update;
-exports.queryImpl = browser.tabs.query;
+export const updateImpl = browser.tabs.update;
+export const queryImpl = browser.tabs.query;
 
-exports.executeScriptCurrentImpl = browser.tabs.executeScript;
-exports.executeScriptImpl = browser.tabs.executeScript;
-exports.insertCssCurrentImpl = browser.tabs.insertCSS;
-exports.insertCssImpl = browser.tabs.insertCSS;
-exports.removeCssCurrentImpl = browser.tabs.removeCSS;
-exports.removeCssImpl = browser.tabs.removeCSS;
+export const executeScriptCurrentImpl = browser.tabs.executeScript;
+export const executeScriptImpl = browser.tabs.executeScript;
+export const insertCssCurrentImpl = browser.tabs.insertCSS;
+export const insertCssImpl = browser.tabs.insertCSS;
+export const removeCssCurrentImpl = browser.tabs.removeCSS;
+export const removeCssImpl = browser.tabs.removeCSS;
 
-exports.sendMessage_ = browser.tabs.sendMessage;
-exports.sendMessageToFrame_ = function(tabId, message, frameId) {
-    return browser.tabs.sendMessage(tabId, message, {"frameId": frameId});
+export const _sendMessage = browser.tabs.sendMessage;
+export function _sendMessageToFrame(tabId, message, frameId) {
+    return browser.tabs.sendMessage(tabId, message, { "frameId": frameId });
 }
