@@ -54,12 +54,11 @@ module Browser.Tabs
 
 import Prelude
 
-import Promise (Promise)
-import Data.Function.Uncurried (Fn1, Fn2, Fn3, runFn1, runFn2, runFn3)
 import Data.Options (Option, Options, opt, options)
 import Effect.Aff (Aff)
-import Effect.Uncurried (EffectFn1, EffectFn2, runEffectFn1, runEffectFn2)
+import Effect.Uncurried (EffectFn1, EffectFn2, EffectFn3, runEffectFn1, runEffectFn2, runEffectFn3)
 import Foreign (Foreign)
+import Promise (Promise)
 import Promise.Aff as Promise
 
 -- | Type safe representation of an integer id of a tab
@@ -255,38 +254,38 @@ windowId = opt "windowId"
 windowType :: Option TabDetails WindowType
 windowType = opt "windowType"
 
-foreign import updateCurrentImpl :: Fn1 Foreign (Promise Tab)
-foreign import updateImpl :: Fn2 Int Foreign (Promise Tab)
-foreign import queryImpl :: Fn1 Foreign (Promise (Array Tab))
+foreign import updateCurrentImpl :: EffectFn1 Foreign (Promise Tab)
+foreign import updateImpl :: EffectFn2 Int Foreign (Promise Tab)
+foreign import queryImpl :: EffectFn1 Foreign (Promise (Array Tab))
 
 -- | Update tab's state: navigate to a new URL or modify properties.
 -- | [tabs.update](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/update)
-update :: TabId -> Options TabDetails -> Promise Tab
-update (TabId id) = options >>> runFn2 updateImpl id
+update :: TabId -> Options TabDetails -> Aff Tab
+update (TabId id) = options >>> runEffectFn2 updateImpl id >>> Promise.toAffE
 
 -- | Same but in current tab
-updateCurrent :: Options TabDetails -> Promise Tab
-updateCurrent = options >>> runFn1 updateCurrentImpl
+updateCurrent :: Options TabDetails -> Aff Tab
+updateCurrent = options >>> runEffectFn1 updateCurrentImpl >>> Promise.toAffE
 
 -- | Query matching tabs
 -- | [tabs.query](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/query)
-query :: Options TabDetails -> Promise (Array Tab)
-query = options >>> runFn1 queryImpl
+query :: Options TabDetails -> Aff (Array Tab)
+query = options >>> runEffectFn1 queryImpl >>> Promise.toAffE
 
-foreign import _sendMessage :: forall m r. Fn2 Int { | m } (Promise { | r })
+foreign import _sendMessage :: forall m r. EffectFn2 Int { | m } (Promise { | r })
 foreign import _sendMessageToFrame
-  :: forall m r. Fn3 Int { | m } Int (Promise { | r })
+  :: forall m r. EffectFn3 Int { | m } Int (Promise { | r })
 
 -- | Send serializable message to a background script and receive a response.
 -- | The function is unsafe because the caller decides on the types of message
 -- | and response. For safe version, see `Browser.Runtime.sendMessage`
 -- | [tabs.sendMessage](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/sendMessage)
-unsafeSendMessage :: forall m r. TabId -> { | m } -> Promise { | r }
-unsafeSendMessage (TabId id) = runFn2 _sendMessage id
+unsafeSendMessage :: forall m r. TabId -> { | m } -> Aff { | r }
+unsafeSendMessage (TabId id) = runEffectFn2 _sendMessage id >>> Promise.toAffE
 
 -- | Same but send to a specific frame
-unsafeSendMessageToFrame :: forall m r. TabId -> { | m } -> Int -> Promise { | r }
-unsafeSendMessageToFrame (TabId id) = runFn3 _sendMessageToFrame id
+unsafeSendMessageToFrame :: forall m r. TabId -> { | m } -> Int -> Aff { | r }
+unsafeSendMessageToFrame (TabId id) message n = runEffectFn3 _sendMessageToFrame id message n # Promise.toAffE
 
 instance showTabId :: Show TabId where
   show (TabId id) = "TabId " <> show id
