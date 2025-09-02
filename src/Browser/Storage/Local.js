@@ -19,3 +19,11 @@ export function _set(keys) {
 export function _clear() {
 	return browser.storage.local.clear()
 }
+
+export function _remove(keys) {
+	return browser.storage.local.remove(keys)
+}
+
+export function _getKeys() {
+	return browser.storage.local.getKeys()
+}

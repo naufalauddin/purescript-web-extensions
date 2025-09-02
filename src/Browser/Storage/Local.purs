@@ -9,6 +9,8 @@ module Browser.Storage.Local
   ( clear
   , getByKey
   , getWithDefault
+  , getKeys
+  , remove
   , set
   ) where
 
@@ -48,3 +50,13 @@ foreign import _clear :: Effect (Promise Unit)
 
 clear :: Aff Unit
 clear = Promise.toAffE _clear
+
+foreign import _remove :: EffectFn1 (Array String) (Promise Unit)
+
+remove :: Array String -> Aff Unit
+remove = Promise.toAffE <<< runEffectFn1 _remove
+
+foreign import _getKeys :: Effect (Promise (Array String))
+
+getKeys :: Aff (Array String)
+getKeys = Promise.toAffE _getKeys
